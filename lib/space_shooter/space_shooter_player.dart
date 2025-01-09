@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:game_dev/space_shooter/space_shooter_bullet.dart';
 import 'package:game_dev/space_shooter/space_shooter_game.dart';
 // import 'package:flutter/material.dart';
 
@@ -9,6 +10,8 @@ import 'package:game_dev/space_shooter/space_shooter_game.dart';
 /// [SpriteAnimationComponent]
 
 class SpaceShooterPlayer extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame> {
+  late final SpawnComponent _bulletSpawner;
+
   // static final _paint = Paint()..color = Colors.white;
 
   /// if you would extend [PositionComponent]
@@ -43,15 +46,12 @@ class SpaceShooterPlayer extends SpriteAnimationComponent with HasGameRef<SpaceS
 
     // sprite = await gameRef.loadSprite('sprite_1.png');
 
-
-
     /// [amount] defines how many frames the animation has, in this case 4
     //
     /// [stepTime] is the time in seconds that each frame will be rendered, before it gets replaced
     /// with the next one.
     //
     /// [textureSize] is the size in pixels which defines each frame of the image.
-
 
     animation = await game.loadSpriteAnimation(
       'space_shooter_player.png',
@@ -63,9 +63,27 @@ class SpaceShooterPlayer extends SpriteAnimationComponent with HasGameRef<SpaceS
     );
 
     position = Vector2(gameRef.size.x / 2, gameRef.size.y - 200);
+
+    _bulletSpawner = SpawnComponent(
+        selfPositioning: true, // for following player
+        autoStart: false,
+        factory: (index) {
+          return SpaceShooterBullet(position: position + Vector2(0, -height / 2));
+        },
+        period: .2);
+
+    gameRef.add(_bulletSpawner);
   }
 
   void move(Vector2 delta) {
     position.add(delta);
+  }
+
+  void startShooting() {
+    _bulletSpawner.timer.start();
+  }
+
+  void stopShooting() {
+    _bulletSpawner.timer.stop();
   }
 }

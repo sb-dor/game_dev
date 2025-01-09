@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
+import 'package:game_dev/space_shooter/space_shooter_enemy.dart';
 
 import 'space_shooter_player.dart';
 
-class SpaceShooterGame extends FlameGame with PanDetector {
+class SpaceShooterGame extends FlameGame with PanDetector, HasCollisionDetection {
   late SpaceShooterPlayer player;
 
   @override
@@ -37,13 +39,25 @@ class SpaceShooterGame extends FlameGame with PanDetector {
     final parallax = await loadParallaxComponent(
       [
         ParallaxImageData('rain.png'),
+        ParallaxImageData('rain.png'),
       ],
       baseVelocity: Vector2(0, -5),
       repeat: ImageRepeat.repeat,
-      velocityMultiplierDelta: Vector2(0, 5),
+      velocityMultiplierDelta: Vector2(0, 15),
     );
 
     add(parallax);
+
+    final enemy = SpawnComponent(
+      factory: (index) {
+        return SpaceShooterEnemy();
+      },
+      period: 1,
+      area: Rectangle.fromLTWH(0, 0, size.x, -SpaceShooterEnemy.enemySize),
+      // selfPositioning: true,
+    );
+
+    add(enemy);
 
     add(
       player,
@@ -54,5 +68,17 @@ class SpaceShooterGame extends FlameGame with PanDetector {
   void onPanUpdate(DragUpdateInfo info) {
     super.onPanUpdate(info);
     player.move(info.delta.global);
+  }
+
+  @override
+  void onPanStart(DragStartInfo info) {
+    super.onPanStart(info);
+    player.startShooting();
+  }
+
+  @override
+  void onPanEnd(DragEndInfo info) {
+    super.onPanEnd(info);
+    player.stopShooting();
   }
 }
