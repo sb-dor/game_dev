@@ -6,11 +6,12 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
+import 'package:game_dev/space_shooter/space_shooter_game.dart';
 
 void main() {
   runApp(
     GameWidget(
-      game: Game(),
+      game: SpaceShooterGame(),
     ),
   );
 }
