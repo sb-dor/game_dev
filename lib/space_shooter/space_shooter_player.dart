@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:game_dev/space_shooter/space_shooter_bullet.dart';
+import 'package:game_dev/space_shooter/space_shooter_enemy.dart';
 import 'package:game_dev/space_shooter/space_shooter_game.dart';
 // import 'package:flutter/material.dart';
 
@@ -9,8 +11,14 @@ import 'package:game_dev/space_shooter/space_shooter_game.dart';
 /// [PositionComponent]
 /// [SpriteAnimationComponent]
 
-class SpaceShooterPlayer extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame> {
+class SpaceShooterPlayer extends SpriteAnimationComponent
+    with HasGameRef<SpaceShooterGame>, CollisionCallbacks {
   late final SpawnComponent _bulletSpawner;
+
+  //
+  late final Vector2 _initialPosition;
+
+  //
 
   // static final _paint = Paint()..color = Colors.white;
 
@@ -62,17 +70,22 @@ class SpaceShooterPlayer extends SpriteAnimationComponent with HasGameRef<SpaceS
       ),
     );
 
-    position = Vector2(gameRef.size.x / 2, gameRef.size.y - 200);
+    _initialPosition = Vector2(gameRef.size.x / 2, gameRef.size.y - 200);
+    position = _initialPosition.clone();
 
     _bulletSpawner = SpawnComponent(
         selfPositioning: true, // for following player
         autoStart: false,
         factory: (index) {
-          return SpaceShooterBullet(position: position + Vector2(0, -height / 2));
+          return SpaceShooterBullet(
+            position: position + Vector2(0, -height / 2),
+          );
         },
         period: .2);
 
     gameRef.add(_bulletSpawner);
+
+    add(RectangleHitbox());
   }
 
   void move(Vector2 delta) {
@@ -85,5 +98,15 @@ class SpaceShooterPlayer extends SpriteAnimationComponent with HasGameRef<SpaceS
 
   void stopShooting() {
     _bulletSpawner.timer.stop();
+  }
+
+  @override
+  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+
+    if (other is SpaceShooterEnemy) {
+      position = _initialPosition.clone();
+      other.removeFromParent();
+    }
   }
 }
