@@ -68,7 +68,7 @@ class SpaceShooterPlayer extends SpriteAnimationComponent
     /// [textureSize] is the size in pixels which defines each frame of the image.
 
     animation = await game.loadSpriteAnimation(
-      'space_shooter_player.png',
+      'space_shooter/space_shooter_player.png',
       SpriteAnimationData.sequenced(
         amount: 4,
         stepTime: 0.1,
@@ -113,9 +113,10 @@ class SpaceShooterPlayer extends SpriteAnimationComponent
     if (other is SpaceShooterEnemy) {
       position = _initialPosition.clone();
       other.removeFromParent();
-      gameRef.overlays.add(secondaryOverlayIdentifier);
       bloc.add(ClearShooterKillsEvent());
       gameRef.pauseEngine();
+      gameRef.overlays.add(secondaryOverlayIdentifier);
+
     }
   }
 }

@@ -15,7 +15,7 @@ class SpaceShooterExplosion extends SpriteAnimationComponent with HasGameRef<Spa
     await super.onLoad();
 
     animation = await gameRef.loadSpriteAnimation(
-      'explosion.png',
+      'space_shooter/explosion.png',
       SpriteAnimationData.sequenced(
         amount: 6,
         stepTime: .05,

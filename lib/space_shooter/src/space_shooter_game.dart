@@ -51,12 +51,13 @@ class SpaceShooterGame extends FlameGame with PanDetector, HasCollisionDetection
 
     final parallax = await loadParallaxComponent(
       [
-        ParallaxImageData('rain.png'),
-        ParallaxImageData('rain.png'),
+        ParallaxImageData('space_shooter/rain.png'),
+        ParallaxImageData('space_shooter/rain.png'),
       ],
       baseVelocity: Vector2(0, -5),
       repeat: ImageRepeat.repeat,
       velocityMultiplierDelta: Vector2(0, 15),
+      alignment: Alignment.center
     );
 
     add(parallax);

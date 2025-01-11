@@ -16,7 +16,7 @@ class SpaceShooterBullet extends SpriteAnimationComponent with HasGameRef<SpaceS
   FutureOr<void> onLoad() async {
     await super.onLoad();
     animation = await gameRef.loadSpriteAnimation(
-      'bullet.png',
+      'space_shooter/bullet.png',
       SpriteAnimationData.sequenced(
         amount: 4,
         stepTime: .2,

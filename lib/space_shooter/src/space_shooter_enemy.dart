@@ -27,7 +27,7 @@ class SpaceShooterEnemy extends SpriteAnimationComponent
     await super.onLoad();
 
     animation = await gameRef.loadSpriteAnimation(
-      'enemy.png',
+      'space_shooter/enemy.png',
       SpriteAnimationData.sequenced(
         amount: 4,
         stepTime: .2,
