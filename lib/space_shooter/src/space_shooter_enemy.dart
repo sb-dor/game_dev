@@ -2,11 +2,16 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game_dev/space_shooter/space_shooter_bullet.dart';
-import 'package:game_dev/space_shooter/space_shooter_game.dart';
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:game_dev/space_shooter/src/bloc/space_shooter_bloc.dart';
+import 'package:game_dev/space_shooter/src/space_shooter_bullet.dart';
+import 'package:game_dev/space_shooter/src/space_shooter_game.dart';
 
 class SpaceShooterEnemy extends SpriteAnimationComponent
-    with CollisionCallbacks, HasGameRef<SpaceShooterGame> {
+    with
+        CollisionCallbacks,
+        HasGameRef<SpaceShooterGame>,
+        FlameBlocReader<SpaceShooterBloc, SpaceShooterState> {
   SpaceShooterEnemy({
     super.position,
   }) : super(
@@ -17,7 +22,7 @@ class SpaceShooterEnemy extends SpriteAnimationComponent
   static const enemySize = 50.0;
 
   @override
-  FutureOr<void> onLoad() async {
+  Future<void> onLoad() async {
     await super.onLoad();
 
     animation = await gameRef.loadSpriteAnimation(
@@ -49,11 +54,7 @@ class SpaceShooterEnemy extends SpriteAnimationComponent
     if (other is SpaceShooterBullet) {
       removeFromParent();
       other.removeFromParent();
+      bloc.add(SpaceShooterKilledEvent());
     }
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    super.onCollisionEnd(other);
   }
 }

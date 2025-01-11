@@ -5,17 +5,31 @@ import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:game_dev/space_shooter/space_shooter_enemy.dart';
+import 'package:game_dev/space_shooter/space_shooter_main.dart';
+import 'package:game_dev/space_shooter/src/space_shooter_enemy.dart';
 
+import 'bloc/space_shooter_bloc.dart';
 import 'space_shooter_player.dart';
 
 class SpaceShooterGame extends FlameGame with PanDetector, HasCollisionDetection {
   late SpaceShooterPlayer player;
 
   @override
+  bool get pauseWhenBackgrounded => true;
+
+  final SpaceShooterBloc _shooterBloc;
+
+  SpaceShooterGame({
+    required SpaceShooterBloc spaceShooterBloc,
+  }) : _shooterBloc = spaceShooterBloc;
+
+  @override
   FutureOr<void> onLoad() async {
     await super.onLoad();
+
+    overlays.add(killStats);
 
     /// [size] is a Vector2 variable from the game class and it holds the current dimension of the
     /// game area, where x is the horizontal dimension or the width, and y is the vertical
@@ -34,7 +48,6 @@ class SpaceShooterGame extends FlameGame with PanDetector, HasCollisionDetection
     //   ..anchor = Anchor.center;
 
     // or you can create player with onLoad method inside and it does same thing
-    player = SpaceShooterPlayer();
 
     final parallax = await loadParallaxComponent(
       [
@@ -48,6 +61,8 @@ class SpaceShooterGame extends FlameGame with PanDetector, HasCollisionDetection
 
     add(parallax);
 
+    player = SpaceShooterPlayer();
+
     final enemy = SpawnComponent(
       factory: (index) {
         return SpaceShooterEnemy();
@@ -57,10 +72,18 @@ class SpaceShooterGame extends FlameGame with PanDetector, HasCollisionDetection
       // selfPositioning: true,
     );
 
-    add(enemy);
-
-    add(
-      player,
+    await add(
+      FlameMultiBlocProvider(
+        providers: [
+          FlameBlocProvider<SpaceShooterBloc, SpaceShooterState>.value(
+            value: _shooterBloc,
+          )
+        ],
+        children: [
+          player,
+          enemy,
+        ],
+      ),
     );
   }
 

@@ -2,25 +2,30 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game_dev/space_shooter/space_shooter_bullet.dart';
-import 'package:game_dev/space_shooter/space_shooter_enemy.dart';
-import 'package:game_dev/space_shooter/space_shooter_game.dart';
-// import 'package:flutter/material.dart';
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:game_dev/space_shooter/space_shooter_main.dart';
+import 'package:game_dev/space_shooter/src/bloc/space_shooter_bloc.dart';
+import 'package:game_dev/space_shooter/src/space_shooter_bullet.dart';
+import 'package:game_dev/space_shooter/src/space_shooter_enemy.dart';
+import 'package:game_dev/space_shooter/src/space_shooter_game.dart';
 
 /// [SpriteComponent]
 /// [PositionComponent]
 /// [SpriteAnimationComponent]
 
 class SpaceShooterPlayer extends SpriteAnimationComponent
-    with HasGameRef<SpaceShooterGame>, CollisionCallbacks {
+    with
+        HasGameRef<SpaceShooterGame>,
+        CollisionCallbacks,
+        FlameBlocReader<SpaceShooterBloc, SpaceShooterState> {
   late final SpawnComponent _bulletSpawner;
 
-  //
+//
   late final Vector2 _initialPosition;
 
-  //
+//
 
-  // static final _paint = Paint()..color = Colors.white;
+// static final _paint = Paint()..color = Colors.white;
 
   /// if you would extend [PositionComponent]
   /// this render would be helpful to you
@@ -28,10 +33,10 @@ class SpaceShooterPlayer extends SpriteAnimationComponent
   /// Unlike [PositionComponent], [SpriteComponent] has an implementation for the render method,
   /// so we can delete the previous override.
 
-  // @override
-  // void render(Canvas canvas) {
-  //   canvas.drawRect(size.toRect(), _paint);
-  // }
+// @override
+// void render(Canvas canvas) {
+//   canvas.drawRect(size.toRect(), _paint);
+// }
 
   SpaceShooterPlayer()
       : super(
@@ -49,16 +54,16 @@ class SpaceShooterPlayer extends SpriteAnimationComponent
   /// running. Now, let’s refactor our game a little bit:
 
   @override
-  FutureOr<void> onLoad() async {
+  Future<void> onLoad() async {
     await super.onLoad();
 
-    // sprite = await gameRef.loadSprite('sprite_1.png');
+// sprite = await gameRef.loadSprite('sprite_1.png');
 
     /// [amount] defines how many frames the animation has, in this case 4
-    //
+//
     /// [stepTime] is the time in seconds that each frame will be rendered, before it gets replaced
     /// with the next one.
-    //
+//
     /// [textureSize] is the size in pixels which defines each frame of the image.
 
     animation = await game.loadSpriteAnimation(
@@ -107,6 +112,9 @@ class SpaceShooterPlayer extends SpriteAnimationComponent
     if (other is SpaceShooterEnemy) {
       position = _initialPosition.clone();
       other.removeFromParent();
+      gameRef.overlays.add(secondaryOverlayIdentifier);
+      bloc.add(ClearShooterKillsEvent());
+      gameRef.pauseEngine();
     }
   }
 }

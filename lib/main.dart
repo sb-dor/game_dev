@@ -6,19 +6,18 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
-import 'package:game_dev/space_shooter/space_shooter_game.dart';
+import 'package:game_dev/space_shooter/space_shooter_main.dart';
 
 void main() {
   runApp(
-    GameWidget(
-      game: SpaceShooterGame(),
-    ),
+    MainShooterSpaceGame(),
   );
 }
 
 class Game extends FlameGame with TapDetector, DragCallbacks {
   late final SpriteComponent player;
   late JoystickComponent joystick;
+
   //
   // @override
   // void render(Canvas canvas) async {
@@ -38,7 +37,6 @@ class Game extends FlameGame with TapDetector, DragCallbacks {
       baseVelocity: Vector2(20, 0), // Scrolling speed
       velocityMultiplierDelta: Vector2(1.5, 1.0), // Different speeds for each layer
     );
-
 
     add(parallax);
 

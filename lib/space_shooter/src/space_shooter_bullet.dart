@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game_dev/space_shooter/space_shooter_game.dart';
+import 'package:game_dev/space_shooter/src/space_shooter_game.dart';
 
 class SpaceShooterBullet extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame> {
   SpaceShooterBullet({
