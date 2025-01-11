@@ -8,9 +8,11 @@ import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
 import 'package:game_dev/space_shooter/space_shooter_main.dart';
 
+import 'ember_quest/ember_quest_main.dart';
+
 void main() {
   runApp(
-    MainShooterSpaceGame(),
+    EmberQuestMain(),
   );
 }
 
