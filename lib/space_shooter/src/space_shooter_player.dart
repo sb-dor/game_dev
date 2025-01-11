@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_dev/space_shooter/space_shooter_main.dart';
 import 'package:game_dev/space_shooter/src/bloc/space_shooter_bloc.dart';
 import 'package:game_dev/space_shooter/src/space_shooter_bullet.dart';
@@ -83,7 +84,7 @@ class SpaceShooterPlayer extends SpriteAnimationComponent
         autoStart: false,
         factory: (index) {
           return SpaceShooterBullet(
-            position: position + Vector2(0, -height / 2),
+            position: position + Vector2(0, -height / 2), // center of the component
           );
         },
         period: .2);

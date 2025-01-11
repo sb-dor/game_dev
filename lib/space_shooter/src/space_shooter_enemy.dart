@@ -55,7 +55,11 @@ class SpaceShooterEnemy extends SpriteAnimationComponent
     if (other is SpaceShooterBullet) {
       removeFromParent();
       other.removeFromParent();
-      gameRef.add(SpaceShooterExplosion(position: position));
+      gameRef.add(
+        SpaceShooterExplosion(
+          position: position + Vector2(0, -height / 2), // center of the component
+        ),
+      );
       bloc.add(SpaceShooterKilledEvent());
     }
   }
