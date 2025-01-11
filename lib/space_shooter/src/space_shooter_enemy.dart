@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:game_dev/space_shooter/src/bloc/space_shooter_bloc.dart';
 import 'package:game_dev/space_shooter/src/space_shooter_bullet.dart';
+import 'package:game_dev/space_shooter/src/space_shooter_explosion.dart';
 import 'package:game_dev/space_shooter/src/space_shooter_game.dart';
 
 class SpaceShooterEnemy extends SpriteAnimationComponent
@@ -54,6 +55,7 @@ class SpaceShooterEnemy extends SpriteAnimationComponent
     if (other is SpaceShooterBullet) {
       removeFromParent();
       other.removeFromParent();
+      gameRef.add(SpaceShooterExplosion(position: position));
       bloc.add(SpaceShooterKilledEvent());
     }
   }
